@@ -9,8 +9,8 @@ import { nanoid } from "nanoid";
 
 // Em produção, o código é compilado e fica em dist/
 // Em desenvolvimento, o código está em server/
-const __filename = import.meta.url ? fileURLToPath(import.meta.url) : __filename;
-const __dirname = __filename ? path.dirname(__filename) : process.cwd();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const viteLogger = createLogger();
 
