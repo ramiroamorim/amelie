@@ -31,7 +31,7 @@ RUN npm ci --only=production
 COPY --from=builder /app/dist ./dist
 
 # Copiar arquivos estáticos se existirem
-COPY --from=builder /app/public ./public 2>/dev/null || true
+COPY --from=builder /app/public ./public/
 
 # Expor porta (padrão Express)
 EXPOSE 5000
