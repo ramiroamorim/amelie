@@ -27,11 +27,11 @@ COPY package*.json ./
 # Instalar apenas dependências de produção
 RUN npm ci --only=production
 
-# Copiar build gerado do stage anterior
+# Copiar build gerado do stage anterior (inclui dist/index.js e dist/public)
 COPY --from=builder /app/dist ./dist
 
-# Copiar arquivos estáticos se existirem
-COPY --from=builder /app/public ./public/
+# Copiar pasta public original (para arquivos de áudio, etc)
+COPY --from=builder /app/public ./public
 
 # Expor porta (padrão Express)
 EXPOSE 5000

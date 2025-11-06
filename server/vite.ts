@@ -7,8 +7,10 @@ import { type Server } from "http";
 import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Em produção, o código é compilado e fica em dist/
+// Em desenvolvimento, o código está em server/
+const __filename = import.meta.url ? fileURLToPath(import.meta.url) : __filename;
+const __dirname = __filename ? path.dirname(__filename) : process.cwd();
 
 const viteLogger = createLogger();
 
@@ -72,7 +74,19 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(__dirname, "public");
+  // Em produção, os arquivos estáticos estão em dist/public
+  // Tenta encontrar o diretório correto
+  let distPath = path.resolve(__dirname, "public");
+
+  // Se não existir, tenta o diretório pai (caso esteja em dist/)
+  if (!fs.existsSync(distPath)) {
+    distPath = path.resolve(__dirname, "..", "public");
+  }
+
+  // Se ainda não existir, tenta procurar no diretório do processo
+  if (!fs.existsSync(distPath)) {
+    distPath = path.resolve(process.cwd(), "dist", "public");
+  }
 
   if (!fs.existsSync(distPath)) {
     throw new Error(
@@ -80,6 +94,7 @@ export function serveStatic(app: Express) {
     );
   }
 
+  log(`Serving static files from: ${distPath}`);
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
