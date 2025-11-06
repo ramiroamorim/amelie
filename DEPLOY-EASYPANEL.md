@@ -11,6 +11,11 @@
 - Adicionada variável `PORT=5000`
 - Mudado comando de inicialização de `npm start` para `node dist/index.js` (mais eficiente)
 
+### 3. Corrigido `vite.config.ts`
+- **CRÍTICO**: Substituído `import.meta.dirname` por `__dirname` usando `fileURLToPath`
+- O `import.meta.dirname` só funciona no Node.js v20.11+ e causava erro `ErrorCaptureStackTrace`
+- Agora compatível com versões mais antigas do Node.js 20
+
 ## Variáveis de Ambiente Necessárias
 
 Configure estas variáveis no EasyPanel:
@@ -18,10 +23,12 @@ Configure estas variáveis no EasyPanel:
 ```env
 NODE_ENV=production
 PORT=5000
-DATABASE_URL=your_database_connection_string
 ```
 
-**Nota:** Se você estiver usando outras variáveis de ambiente (como chaves de API, secrets, etc), adicione-as também no painel do EasyPanel.
+**Nota:**
+- A aplicação usa `MemStorage` (armazenamento em memória), então **NÃO PRECISA** de banco de dados
+- Os dados são armazenados em memória e serão resetados a cada restart do container
+- Se você estiver usando outras variáveis de ambiente (como chaves de API, secrets, etc), adicione-as também no painel do EasyPanel
 
 ## Passos para Deploy
 
@@ -66,8 +73,8 @@ https://amelie-app-recettes.9k998j.easypanel.host/
 
 ### Aplicação não inicia
 - Verifique os logs no EasyPanel
-- Confirme que `DATABASE_URL` está configurada corretamente
-- Verifique se a porta 5000 está exposta
+- Confirme que `NODE_ENV=production` está configurada
+- Verifique se a porta 5000 está exposta corretamente
 
 ### Assets/imagens não carregam
 - Verifique se as pastas `public` e `attached_assets` estão sendo copiadas corretamente
@@ -82,7 +89,7 @@ Para testar o Dockerfile localmente antes do deploy:
 docker build -t amelie-app .
 
 # Executar container
-docker run -p 5000:5000 -e NODE_ENV=production -e DATABASE_URL=your_db_url amelie-app
+docker run -p 5000:5000 -e NODE_ENV=production amelie-app
 
 # Acessar em http://localhost:5000
 ```
