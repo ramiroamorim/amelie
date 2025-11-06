@@ -9,7 +9,6 @@ README.md
 .DS_Store
 .vscode
 .idea
-dist
 *.md
 .github
 coverage
