@@ -61,4 +61,4 @@ npm run build
 - **Facebook Pixel**: Eventos de conversão configurados
 - **Utmify**: Script carregado em todas as páginas
 - **Hotmart**: Links de afiliação configurados
-- **Audio Player**: Reprodução automática e controles customizados
+- **Audio Player**: Reprodução automática e controles customizados# amelie
